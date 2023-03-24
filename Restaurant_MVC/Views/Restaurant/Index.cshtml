@@ -1,0 +1,117 @@
+﻿@model List<Restaurant_MVC.Models.Restaurant>
+@{
+    ViewData["Title"] = "restaurant";
+   // string message = TempData["Message"] as string;
+
+}
+
+<h1>Liste of Restaurants</h1>
+<div class="fw-bold text-lg-end">
+    <!--This is my customer tagHelper it's using to count number of restaurants and display it-->
+    <count></count>
+</div>
+
+<table class="table mt-4">
+    <a asp-action="Create" class="btn btn-primary px-4 py-2 text-white mb-2">Create New Restaurant</a>
+    <thead>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Description</th>
+    <td>Action</td>
+    </thead>
+    <tbody>
+        @foreach (var restaurant in Model)
+        {
+            <tr>
+                <td>@restaurant.Id</td>
+                <td>@restaurant.Name</td>
+                <td>@restaurant.Description</td>
+                <td>
+                    <a class="mr-1 btn btn-primary"
+                   asp-controller="Restaurant"
+                   asp-action="Detail"
+                   asp-route-id="@restaurant.Id">
+                        Details
+                    </a>
+
+                    <a class="mr-1 btn btn-warning"
+                   asp-controller="Restaurant"
+                   asp-action="Edit"
+                   asp-route-id="@restaurant.Id">
+                        Edit
+                    </a>
+
+                    <!--<a class="text-danger mr-1 text-decoration-none"
+                   asp-controller="Restaurant"
+                   asp-action="Delete"
+                   asp-route-id="@restaurant.Id">
+                        Delete
+                    </a>-->
+                    <button 
+                        class="btn btn-danger"
+                        type="button" 
+                        class="text-danger mr-1" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#exampleModal"
+                        onclick="saveId(@restaurant.Id)">Delete</button>
+
+                </td>
+               
+            </tr>
+        }
+    </tbody>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    Are you Sure you want delete this restaurant?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="confirmationBtn" class="btn btn-danger" onclick="myFunction()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</table>
+
+
+@section scripts
+{
+    <script>
+
+        let id=-1;
+        var modal = document.getElementById("exampleModal");
+
+        function myFunction(btnId) {
+            console.log(id);
+
+             $.ajax({
+                url: '@Url.Action("ConfirmDelete","Restaurant")',
+                 type: 'Post',
+                 data: { id: id },
+                success: function (data) {
+                    modal.style="display:none";
+                    modal.classList.remove("show");
+                    modal.setAttribute("role","");
+
+                }
+             });
+           
+        }
+        function saveId(eleId){
+            id=eleId;
+        }
+
+    </script>
+}
+
+
+
+    
+
+
+
+
